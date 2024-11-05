@@ -29,6 +29,8 @@ public class Startup
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ITokenService, TokenService>();
 
+        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 
         services.AddControllers();
         services.AddEndpointsApiExplorer();
