@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens; // Biblioteca padrao do C#
+using UserAuth.API.DTOs;
 using UserAuth.Application.Interfaces;
 using UserAuth.Domain.Entities;
 
@@ -16,7 +17,7 @@ namespace UserAuth.Application.Services
             _configuration = configuration;
         }
 
-        public string GenerateToken(User user)
+        public string GenerateToken(UserTokenPayloadDTO userTokenPayloadDTO)
         {
             var secretKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(
@@ -32,14 +33,17 @@ namespace UserAuth.Application.Services
                 SecurityAlgorithms.HmacSha256 // Seguro, mas nem tanto "comum"
             );
 
+   
+
+
             // Payload
             var tokenOptions = new JwtSecurityToken(
                 issuer: issuer,
                 audience: audience,
                 claims: new []
                 {
-                    new Claim(type: ClaimTypes.Name, user.Name),
-                    new Claim(type: ClaimTypes.Role, "user:admin")
+                    new Claim(type: ClaimTypes.Name, userTokenPayloadDTO.Name),
+                    new Claim(type: ClaimTypes.Role, userTokenPayloadDTO.Role ?? "user:read")
                 },
                 expires: DateTime.Now.AddHours(1),
                 signingCredentials: credentials
