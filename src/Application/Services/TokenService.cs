@@ -54,9 +54,10 @@ namespace UserAuth.Application.Services
             return token;
         }
 
+        //TODO: TESTAR
         public string RefreshToken(string token)
         {   
-        
+            Console.WriteLine(token);
             // Validate and decode received token
             JwtSecurityTokenHandler tokenHandler = new();
             byte[] secret_key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? string.Empty);
@@ -72,13 +73,14 @@ namespace UserAuth.Application.Services
                         ValidateAudience = true,
                         ValidIssuer = _configuration["Jwt:Issuer"],
                         ValidAudience = _configuration["Jwt:Audience"],
-                        ClockSkew = TimeSpan.Zero
+                        ClockSkew = TimeSpan.Zero,
+                        ValidateLifetime = false
                     }, 
                     out SecurityToken validatedToken
                 );
 
                 var jwtToken = (JwtSecurityToken)validatedToken;
-
+                Console.WriteLine(jwtToken);
                 // Check if token is valid
                 if (jwtToken.ValidTo < DateTime.UtcNow)
                 {
