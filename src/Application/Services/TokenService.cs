@@ -1,10 +1,10 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.IdentityModel.Tokens; // Biblioteca padrao do C#
 using UserAuth.API.DTOs;
 using UserAuth.Application.Interfaces;
-using UserAuth.Domain.Entities;
 
 namespace UserAuth.Application.Services
 {
@@ -27,16 +27,16 @@ namespace UserAuth.Application.Services
             var issuer = _configuration["Jwt:Issuer"];
             var audience = _configuration["Jwt:Audience"];
 
-            // Header
+            // Struct header payload
             var credentials = new SigningCredentials(
                 secretKey,
-                SecurityAlgorithms.HmacSha256 // Seguro, mas nem tanto "comum"
+                SecurityAlgorithms.HmacSha256 
             );
 
-   
 
+            // Struct token payload
+            double expires_in = Convert.ToDouble(_configuration["Jwt:Issuer"]);
 
-            // Payload
             var tokenOptions = new JwtSecurityToken(
                 issuer: issuer,
                 audience: audience,
@@ -45,7 +45,7 @@ namespace UserAuth.Application.Services
                     new Claim(type: ClaimTypes.Name, userTokenPayloadDTO.Name),
                     new Claim(type: ClaimTypes.Role, userTokenPayloadDTO.Role ?? "user:read")
                 },
-                expires: DateTime.Now.AddHours(1),
+                expires: DateTime.Now.AddHours(expires_in),
                 signingCredentials: credentials
             );
 
@@ -54,9 +54,55 @@ namespace UserAuth.Application.Services
             return token;
         }
 
-        public string RefreshToken()
-        {
-            throw new NotImplementedException();
+        public string RefreshToken(string token)
+        {   
+        
+            // Validate and decode received token
+            JwtSecurityTokenHandler tokenHandler = new();
+            byte[] secret_key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? string.Empty);
+
+            try
+            {
+                tokenHandler.ValidateToken(
+                    token, 
+                    new TokenValidationParameters{
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(secret_key),
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidIssuer = _configuration["Jwt:Issuer"],
+                        ValidAudience = _configuration["Jwt:Audience"],
+                        ClockSkew = TimeSpan.Zero
+                    }, 
+                    out SecurityToken validatedToken
+                );
+
+                var jwtToken = (JwtSecurityToken)validatedToken;
+
+                // Check if token is valid
+                if (jwtToken.ValidTo < DateTime.UtcNow)
+                {
+                    throw new SecurityTokenExpiredException("Token expirado.");
+                }
+
+                // Extract payload claims from token
+                var userTokenPayloadDTO = new UserTokenPayloadDTO
+                {
+                    Name = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.Name).Value,
+                    Role = jwtToken.Claims.First(claim => claim.Type == ClaimTypes.Role).Value
+                };
+
+                // Return a new token
+                return GenerateToken(userTokenPayloadDTO);
+            }
+            catch (Exception ex)
+            {
+                throw new UnauthorizedAccessException("Token inválido ou expirado.", ex);
+            }
+
+
+
         }
     }
 }
+   

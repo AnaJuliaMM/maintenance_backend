@@ -8,6 +8,6 @@ namespace UserAuth.Application.Interfaces
     {
         public string GenerateToken(UserTokenPayloadDTO userTokenPayloadDTO);
 
-        public string RefreshToken();
+        public string RefreshToken(string token);
     }
 }
