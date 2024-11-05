@@ -22,11 +22,11 @@ namespace UserAuth.API.Controllers
         [HttpPost]
         public async Task<IActionResult> LoginUser(UserLoginDTO userLoginDTO)
         {
-            var user = await _authService.LoginUser(userLoginDTO);
-            if (user == null)
+            var userTokenPayloadDTO = await _authService.LoginUser(userLoginDTO);
+            if (userTokenPayloadDTO == null)
                 return Unauthorized("Invalid Credentials");
 
-            var token = _tokenService.GenerateToken(user);
+            var token = _tokenService.GenerateToken(userTokenPayloadDTO);
             return Ok(token);
         }
     }
