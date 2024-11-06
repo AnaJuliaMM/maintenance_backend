@@ -10,7 +10,7 @@ namespace MachineAPI.Infrastructure.Data
 
         public DbSet<Machine> Machines { get; set; }
         public DbSet<Location> Locations { get; set; }
-        public DbSet<Type> Types { get; set; }
+        public DbSet<Category> Categories { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {   
