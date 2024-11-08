@@ -23,6 +23,11 @@ namespace MachineAPI.Infrastructure.Data
             return await _context.Categories.FindAsync(id);
         }
 
+        public async Task<Category?> GetByName(string categoryName)
+        {
+            return await _context.Categories.FirstOrDefaultAsync(c => c.Label == categoryName);
+        }
+
         public async Task Add(Category category)
         {
             await _context.Categories.AddAsync(category);

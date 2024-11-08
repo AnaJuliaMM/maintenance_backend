@@ -23,6 +23,11 @@ namespace MachineAPI.Infrastructure.Data
             return await _context.Locations.FindAsync(id);
         }
 
+        public async Task<Location?> GetByName(string locationName)
+        {
+            return await _context.Locations.FirstOrDefaultAsync(l => l.Name == locationName);
+        }
+
         public async Task Add(Location location)
         {
             await _context.Locations.AddAsync(location);

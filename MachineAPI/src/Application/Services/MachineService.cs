@@ -1,4 +1,4 @@
-using MachineAPI.Application.Helpers;
+using AutoMapper;
 using MachineAPI.Application.Interfaces;
 using MachineAPI.Domain.Entities;
 using MachineAPI.Domain.Interfaces;
@@ -8,87 +8,42 @@ namespace MachineAPI.Application.Services
 {
     public class MachineService : IMachineService
     {
-        private readonly IMachineService _machineRepository;
+        private readonly IMachineRepository _machineRepository;
+        private readonly IMapper _mapper;
 
-        public MachineService(IMachineRepository machineRepository, ILocationRepository locationRepository, ICategoryRepository categoryRepository)
+        public MachineService(IMachineRepository machineRepository, IMapper mapper)
         {
             _machineRepository = machineRepository;
-            _locationRepository = locationRepository;
-            _categoryRepository = categoryRepository;
-
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<MachineDTO>> GetAll()
         {
-            var machines = await _machineRepository.GetAll();
-            return machines.Select(machine => new MachineDTO
-            {
-                Id = machine.Id,
-                SerialNumber = machine.SerialNumber,
-                Name = machine.Name,
-                ManufactureDate = machine.ManufactureDate,
-                Category = new MachineCategoryDTO{
-                    Id= machine.Category.Id,
-                    Label= machine.Category.Label,
-                },
-                Location = new MachineLocationDTO{
-                    Id= machine.Location.Id,
-                    Name= machine.Location.Name,
-                    Description= machine.Location.Description,
-                }      
-            });
+            IEnumerable<Machine> machines = await _machineRepository.GetAll();
+            return _mapper.Map<IEnumerable<MachineDTO>>(machines);
         }
 
-        public async Task<MachineDTO> GetById(int id)
+        public async Task<MachineDTO?> GetById(int id)
         {
-            var machine = await _machineRepository.GetById(id);
-            if (machine == null) return null;
-
-            return new MachineDTO
-            {
-                Id = machine.Id,
-                SerialNumber = machine.SerialNumber,
-                Name = machine.Name,
-                ManufactureDate = machine.ManufactureDate,
-                Category = new MachineCategoryDTO{
-                    Id= machine.Category.Id,
-                    Label= machine.Category.Label,
-                },
-                Location = new MachineLocationDTO{
-                    Id= machine.Location.Id,
-                    Name= machine.Location.Name,
-                    Description= machine.Location.Description,
-                }      
-            };
+            Machine? machine = await _machineRepository.GetById(id);
+            return machine != null ? _mapper.Map<MachineDTO>(machine) : null;
         }
 
-        public async Task Add(MachineDTO machineDTO)
+        public async Task Add(MachineDTO MachineDTO)
         {
-            var machine = new Machine
-            {
-                Id = machineDTO.Id,
-                SerialNumber = machineDTO.SerialNumber,
-                Name = machineDTO.Name,
-                Model = machineDTO.Model,
-                ManufactureDate = machineDTO.ManufactureDate,    
-            };
-
+            Machine machine = _mapper.Map<Machine>(MachineDTO);
             await _machineRepository.Add(machine);
-
-            // Persist Location on database
-            var existingLocation = await 
-
-            // Persist Category on database
         }
 
-        public async Task UpdateUser(int id, UserDTO userDTO)
+        public async Task Update(int id, MachineDTO MachineDTO)
         {
-
+            Machine machine = _mapper.Map<Machine>(MachineDTO);
+            await _machineRepository.Update(machine);
         }
 
-        public async Task DeleteUser(int id)
+        public async Task Delete(int id)
         {
-            
+            await _machineRepository.Delete(id);
         }
     }
 }

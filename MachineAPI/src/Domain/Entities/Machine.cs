@@ -9,13 +9,13 @@ namespace MachineAPI.Domain.Entities
         public DateTime ManufactureDate { get; set; } = DateTime.MinValue; 
 
         // Category entity n:1 relation
-        public int CategoryId { get; set; } = 0; 
-        public Category? Category { get; set; }
+        public  int? CategoryId { get; set; }
+        public  Category? Category { get; set; }
 
 
         // Location entity n:1 relation
-        public int LocationId { get; set; } = 0; 
-        public Location? Location { get; set; }
+        public  int? LocationId { get; set; } 
+        public  Location? Location { get; set; }
 
 
     }

@@ -1,8 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using MachineAPI.API.Extensions;
 using MachineAPI.Infrastructure.Data;
+using MachineAPI.Domain.Interfaces;
 using Microsoft.OpenApi.Models;
+using MachineAPI.Application.Services;
+using MachineAPI.Application.Interfaces;
 using System.Text;
+using AutoMapper;
 public class Startup
 {
     private readonly IConfiguration _configuration;
@@ -17,7 +21,15 @@ public class Startup
             options =>options.UseNpgsql(_configuration.GetConnectionString("DefaultConnection"))
         );
 
+        services.AddScoped<IMachineRepository, MachineRepository>();
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
+        services.AddScoped<ILocationRepository, LocationRepository>();
 
+        services.AddScoped<IMachineService, MachineService>();
+        services.AddScoped<ICategoryService, CategoryService>();
+        services.AddScoped<ILocationService, LocationService>();
+
+        services.AddAutoMapper(typeof(MappingDTO));
 
         services.AddControllers();
         services.AddEndpointsApiExplorer();

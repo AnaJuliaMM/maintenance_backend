@@ -9,5 +9,6 @@ namespace MachineAPI.Domain.Interfaces
         Task Add(Machine machine);
         Task Update(Machine machine);
         Task Delete(int id);
+
     }
 }

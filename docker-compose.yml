@@ -28,6 +28,14 @@ services:
       - "3012:8080"
     depends_on:
       - db
+    
+  gateway_api:
+    build:
+      context: .
+      dockerfile: ./GatewayAPI/Dockerfile
+    ports:
+      - "3013:8080"
+
 
   pgadmin:
     image: dpage/pgadmin4
