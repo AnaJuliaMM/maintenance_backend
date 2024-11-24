@@ -25,7 +25,7 @@ namespace MachineAPI.Infrastructure.Data
 
         public async Task<Category?> GetByName(string categoryName)
         {
-            return await _context.Categories.FirstOrDefaultAsync(c => c.Label == categoryName);
+            return await _context.Categories.FirstOrDefaultAsync(c => c.Name == categoryName);
         }
 
         public async Task Add(Category category)
