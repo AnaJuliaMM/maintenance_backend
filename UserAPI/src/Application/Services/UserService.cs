@@ -1,73 +1,95 @@
-using UserAuth.API.DTOs;
-using UserAuth.Application.Helpers;
-using UserAuth.Application.Interfaces;
-using UserAuth.Domain.Entities;
-using UserAuth.Domain.Interfaces;
+using AutoMapper;
+using UserAPI.API.DTOs;
+using UserAPI.Application.Helpers;
+using UserAPI.Application.Interfaces;
+using UserAPI.Domain.Entities;
+using UserAPI.Domain.Interfaces;
 
-namespace UserAuth.Application.Services
+namespace UserAPI.Application.Services
 {
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, IMapper mapper)
         {
             _userRepository = userRepository;
+            _mapper = mapper;
         }
 
-        public async Task<IEnumerable<UserDTO>> GetAllUsers()
+        public async Task<IEnumerable<UserDTO>> GetAll()
         {
-            var users = await _userRepository.GetAllUsers();
-            return users.Select(user => new UserDTO
-            {
-                Name = user.Name,
-                Email = user.Email,
-                Username = user.Username
-            });
+            var users = await _userRepository.GetAll();
+            return _mapper.Map<IEnumerable<UserDTO>>(users);
         }
 
-        public async Task<UserDTO> GetUserById(int id)
+        public async Task<UserDTO?> GetById(int id)
         {
-            var user = await _userRepository.GetUserById(id);
-            if (user == null) return null;
-
-            return new UserDTO
+            if (id <= 0)
             {
-                Name = user.Name,
-                Email = user.Email,
-                Username = user.Username
-            };
-        }
-
-        public async Task AddUser(UserDTO userDTO)
-        {
-            var user = new User
-            {
-                Name = userDTO.Name,
-                Email = userDTO.Email,
-                Username = userDTO.Username,
-                Password = PasswordHelper.HashPassword(userDTO.Password)
-            };
-
-            await _userRepository.AddUser(user);
-        }
-
-        public async Task UpdateUser(int id, UserDTO userDTO)
-        {
-            var user = await _userRepository.GetUserById(id);
-            if (user != null)
-            {
-                user.Name = userDTO.Name;
-                user.Email = userDTO.Email;
-                user.Username = userDTO.Username;
-
-                await _userRepository.UpdateUser(user);
+                throw new ArgumentException("ID inválido.");
             }
+
+            User? user = await _userRepository.GetById(id);
+
+            if (user == null)
+            {
+                throw new KeyNotFoundException($"Usuário com ID {id} não encontrado.");
+            }
+
+            return user != null ? _mapper.Map<UserDTO>(user) : null;
         }
 
-        public async Task DeleteUser(int id)
+        public async Task Add(UserDTO userDTO)
         {
-            await _userRepository.DeleteUser(id);
+            if (userDTO == null)
+            {
+                throw new ArgumentNullException(nameof(userDTO), "Nenhum dado foi recebido.");
+            }
+
+            User user = _mapper.Map<User>(userDTO);
+
+            await _userRepository.Add(user);
+        }
+
+        public async Task Update(int id, UserDTO userDTO)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("ID inválido.");
+            }
+
+            if (userDTO == null)
+            {
+                throw new ArgumentNullException(nameof(userDTO), "Nenhum dado foi recebido.");
+            }
+
+            User? user = await _userRepository.GetById(id);
+
+            if (user == null)
+            {
+                throw new KeyNotFoundException($"Usuário com ID {id} não encontrado.");
+            }
+
+            _mapper.Map(userDTO, user);
+            await _userRepository.Update(user);
+        }
+
+        public async Task Delete(int id)
+        {
+            if (id <= 0)
+            {
+                throw new ArgumentException("ID inválido.");
+            }
+
+            User? user = await _userRepository.GetById(id);
+
+            if (user == null)
+            {
+                throw new KeyNotFoundException($"Usuário com ID {id} não encontrado.");
+            }
+            await _userRepository.Delete(id);
         }
     }
 }
