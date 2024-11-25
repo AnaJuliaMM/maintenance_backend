@@ -3,7 +3,6 @@ using System.Text;
 
 namespace UserAPI.Application.Helpers
 {
-
     public class PasswordHelper
     {
         public static string HashPassword(string password)
@@ -19,8 +18,9 @@ namespace UserAPI.Application.Helpers
         public static bool VerifyPassword(string enteredPassword, string storedHash)
         {
             string enteredHash = HashPassword(enteredPassword);
+            Console.WriteLine($"Usuário {enteredHash} não {storedHash}");
+
             return enteredHash == storedHash;
         }
     }
-
 }

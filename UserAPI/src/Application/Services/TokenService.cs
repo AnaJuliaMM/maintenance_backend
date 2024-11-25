@@ -25,11 +25,11 @@ namespace UserAPI.Application.Services
             var issuer = _configuration["Jwt:Issuer"];
             var audience = _configuration["Jwt:Audience"];
 
-            // Struct header payload
+            // Build header payload
             var credentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
 
-            // Struct token payload
-            double expires_in = Convert.ToDouble(_configuration["Jwt:Issuer"]);
+            // Build token payload
+            double expires_in = Convert.ToDouble(_configuration["Jwt:expiration"]);
 
             var tokenOptions = new JwtSecurityToken(
                 issuer: issuer,
@@ -51,8 +51,6 @@ namespace UserAPI.Application.Services
         //TODO: TESTAR
         public string RefreshToken(string token)
         {
-            Console.WriteLine(token);
-            // Validate and decode received token
             JwtSecurityTokenHandler tokenHandler = new();
             byte[] secret_key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? string.Empty);
 
@@ -75,7 +73,7 @@ namespace UserAPI.Application.Services
                 );
 
                 var jwtToken = (JwtSecurityToken)validatedToken;
-                Console.WriteLine(jwtToken);
+
                 // Check if token is valid
                 if (jwtToken.ValidTo < DateTime.UtcNow)
                 {
