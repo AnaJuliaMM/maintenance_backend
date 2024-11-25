@@ -23,12 +23,12 @@ namespace UserAPI.Application.Services
 
         public async Task<UserTokenPayloadDTO?> LoginUser(UserLoginDTO userLoginDTO)
         {
-            var user = await _userRepository.FindByUsername(userLoginDTO.Username);
+            User? user = await _userRepository.FindByUsername(userLoginDTO.Username);
+
             if (user != null)
                 if (PasswordHelper.VerifyPassword(userLoginDTO.Password, user.Password))
                     return _mapper.Map<UserTokenPayloadDTO>(user);
 
-                    
             return null;
         }
     }
