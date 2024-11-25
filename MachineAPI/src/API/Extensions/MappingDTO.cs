@@ -9,7 +9,11 @@ public class MappingDTO : Profile
 {
     public MappingDTO()
     {
-        CreateMap<Machine, MachineDTO>().ReverseMap();
+        CreateMap<Machine, MachineDTO>()
+            .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category)) 
+            .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Location));
+
+        CreateMap<Machine, CreateUpdateMachineDTO>().ReverseMap();
         CreateMap<Category, CategoryDTO>().ReverseMap();
         CreateMap<Location, LocationDTO>().ReverseMap();
     }
