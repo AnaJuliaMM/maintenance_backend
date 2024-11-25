@@ -1,10 +1,11 @@
-namespace UserAuth.API.DTOs
+namespace UserAPI.API.DTOs
 {
     public class UserDTO
     {
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
+        public required int Id { get; set; }
+        public required string Name { get; set; }
+        public required  string Email { get; set; }
+        public required  string Username { get; set; }
+        public string? Password { get; set; }
     }
 }
