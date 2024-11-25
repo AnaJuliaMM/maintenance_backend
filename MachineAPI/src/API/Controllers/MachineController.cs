@@ -20,45 +20,103 @@ namespace MachineAPI.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<MachineDTO>> GetById(int id)
         {
-            MachineDTO? machine = await _machineService.GetById(id);
-            if (machine == null)
+            try
             {
-                return NotFound("Machine ID does not exist");
+                MachineDTO? machine = await _machineService.GetById(id);
+                return Ok(machine);
             }
-            return Ok(machine);
+            catch (ArgumentException ex)
+            {
+                return BadRequest($"Erro de argumento: {ex.Message}");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+            }
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MachineDTO>>> GetAll()
         {
-            IEnumerable<MachineDTO> machines = await _machineService.GetAll();
-            return Ok(machines);
+            try
+            {
+                IEnumerable<MachineDTO> machines = await _machineService.GetAll();
+                return Ok(machines);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+            }
         }
 
         [HttpPost]
         public async Task<ActionResult> Create([FromBody] CreateUpdateMachineDTO MachineDTO)
         {
-            await _machineService.Add(MachineDTO);
-            return CreatedAtAction(nameof(GetById), new { id = MachineDTO.Id }, MachineDTO);
+            try
+            {
+                await _machineService.Add(MachineDTO);
+                return CreatedAtAction(nameof(GetById), new { id = MachineDTO.Id }, MachineDTO);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+            }
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id, [FromBody] CreateUpdateMachineDTO MachineDTO)
         {
-            if (id != MachineDTO.Id)
+            try
             {
-                return BadRequest();
+                await _machineService.Update(id, MachineDTO);
+                return NoContent();
             }
-
-            await _machineService.Update(id, MachineDTO);
-            return NoContent();
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest($"Erro de argumento: {ex.Message}");
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest($"Erro de argumento: {ex.Message}");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            await _machineService.Delete(id);
-            return NoContent();
+            try
+            {
+                await _machineService.Delete(id);
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest($"Erro de argumento: {ex.Message}");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+            }
         }
     }
 }
