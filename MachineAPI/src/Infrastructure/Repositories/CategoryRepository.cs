@@ -1,6 +1,6 @@
-using Microsoft.EntityFrameworkCore;
 using MachineAPI.Domain.Entities;
 using MachineAPI.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace MachineAPI.Infrastructure.Data
 {
