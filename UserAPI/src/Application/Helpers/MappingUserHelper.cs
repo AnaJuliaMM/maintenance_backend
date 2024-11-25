@@ -1,6 +1,6 @@
 using AutoMapper;
-using UserAuth.API.DTOs;
-using UserAuth.Domain.Entities;
+using UserAPI.API.DTOs;
+using UserAPI.Domain.Entities;
 
 public class MappingProfile : Profile
 {
