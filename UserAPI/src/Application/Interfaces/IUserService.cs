@@ -1,13 +1,13 @@
-using UserAuth.API.DTOs;
+using UserAPI.API.DTOs;
 
-namespace UserAuth.Application.Interfaces
+namespace UserAPI.Application.Interfaces
 {
     public interface IUserService
     {
-        Task<IEnumerable<UserDTO>> GetAllUsers();
-        Task<UserDTO> GetUserById(int id);
-        Task AddUser(UserDTO userDTO);
-        Task UpdateUser(int id, UserDTO userDTO);
-        Task DeleteUser(int id);
+        Task<IEnumerable<UserDTO>> GetAll();
+        Task<UserDTO?> GetById(int id);
+        Task Add(UserDTO userDTO);
+        Task Update(int id, UserDTO userDTO);
+        Task Delete(int id);
     }
 }
