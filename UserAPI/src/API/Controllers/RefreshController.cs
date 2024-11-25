@@ -15,7 +15,7 @@ namespace UserAPI.API.Controllers
 
         [HttpPost]
         public async Task<IActionResult> RefreshToken()
-        {   
+        {
             // Extract token from request header
             string authHeader = HttpContext.Request.Headers.Authorization.ToString();
 
@@ -26,7 +26,7 @@ namespace UserAPI.API.Controllers
 
             string token = authHeader["Bearer ".Length..].Trim();
 
-             try
+            try
             {
                 // Chama o método RefreshToken do serviço de autenticação
                 var newToken = await Task.Run(() => _tokenService.RefreshToken(token));
@@ -40,11 +40,8 @@ namespace UserAPI.API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Ocorreu um erro ao processar a requisição.");
+                return StatusCode(500, $"Ocorreu um erro ao processar a requisição: {ex}");
             }
-
-            
-
         }
     }
 }
