@@ -19,45 +19,103 @@ namespace MachineAPI.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<LocationDTO?>> GetById(int id)
         {
-            LocationDTO? location = await _locationService.GetById(id);
-            if (location == null)
+            try
             {
-                return NotFound("Location ID does not exist");
+                LocationDTO? location = await _locationService.GetById(id);
+                return Ok(location);
             }
-            return Ok(location);
+            catch (ArgumentException ex)
+            {
+                return BadRequest($"Erro de argumento: {ex.Message}");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+            }
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<LocationDTO>>> GetAll()
         {
-            IEnumerable<LocationDTO> locations = await _locationService.GetAll();
-            return Ok(locations);
+            try
+            {
+                IEnumerable<LocationDTO> locations = await _locationService.GetAll();
+                return Ok(locations);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+            }
         }
 
         [HttpPost]
         public async Task<ActionResult> Create([FromBody] LocationDTO locationDTO)
         {
-            await _locationService.Add(locationDTO);
-            return CreatedAtAction(nameof(GetById), new { id = locationDTO.Id }, locationDTO);
+            try
+            {
+                await _locationService.Add(locationDTO);
+                return CreatedAtAction(nameof(GetById), new { id = locationDTO.Id }, locationDTO);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+            }
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id, [FromBody] LocationDTO locationDTO)
         {
-            if (id != locationDTO.Id)
+            try
             {
-                return BadRequest();
+                await _locationService.Update(id, locationDTO);
+                return NoContent();
             }
-
-            await _locationService.Update(id, locationDTO);
-            return NoContent();
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest($"Erro de argumento: {ex.Message}");
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest($"Erro de argumento: {ex.Message}");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            await _locationService.Delete(id);
-            return NoContent();
+            try
+            {
+                await _locationService.Delete(id);
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest($"Erro de argumento: {ex.Message}");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+            }
         }
     }
 }
