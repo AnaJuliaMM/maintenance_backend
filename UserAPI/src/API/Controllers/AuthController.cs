@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using UserAuth.API.DTOs;
-using UserAuth.Application.Helpers;
-using UserAuth.Application.Interfaces;
-using UserAuth.Application.Services;
+using UserAPI.API.DTOs;
+using UserAPI.Application.Helpers;
+using UserAPI.Application.Interfaces;
+using UserAPI.Application.Services;
 
-namespace UserAuth.API.Controllers
+namespace UserAPI.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
