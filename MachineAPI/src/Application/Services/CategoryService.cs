@@ -27,14 +27,14 @@ namespace MachineAPI.Application.Services
         {
             if (id <= 0)
             {
-                throw new ArgumentException("ID inválido");
+                throw new ArgumentException("ID inválido.");
             }
 
             Category? category = await _categoryRepository.GetById(id);
 
             if (category == null)
             {
-                throw new KeyNotFoundException($"Categoria com ID {id} não encontrado.");
+                throw new KeyNotFoundException($"Categoria com ID {id} não encontrada.");
             }
 
             return category != null ? _mapper.Map<CategoryDTO>(category) : null;
@@ -44,7 +44,7 @@ namespace MachineAPI.Application.Services
         {
             if (categoryDTO == null)
             {
-                throw new ArgumentNullException(nameof(categoryDTO), "Nenhum dado foi recebido");
+                throw new ArgumentNullException(nameof(categoryDTO), "Nenhum dado foi recebido.");
             }
 
             Category category = _mapper.Map<Category>(categoryDTO);
@@ -55,19 +55,19 @@ namespace MachineAPI.Application.Services
         {
             if (id <= 0)
             {
-                throw new ArgumentException("ID inválido");
+                throw new ArgumentException("ID inválido.");
             }
 
             if (categoryDTO == null)
             {
-                throw new ArgumentNullException(nameof(categoryDTO), "Nenhum dado foi recebido");
+                throw new ArgumentNullException(nameof(categoryDTO), "Nenhum dado foi recebido.");
             }
 
             Category? category = await _categoryRepository.GetById(id);
 
             if (category == null)
             {
-                throw new KeyNotFoundException($"Categoria com ID {id} não encontrado.");
+                throw new KeyNotFoundException($"Categoria com ID {id} não encontrada.");
             }
 
             _mapper.Map(categoryDTO, category);
@@ -79,14 +79,14 @@ namespace MachineAPI.Application.Services
         {
             if (id <= 0)
             {
-                throw new ArgumentException("ID inválido");
+                throw new ArgumentException("ID inválido.");
             }
 
             Category? category = await _categoryRepository.GetById(id);
 
             if (category == null)
             {
-                throw new KeyNotFoundException($"Categoria com ID {id} não encontrado.");
+                throw new KeyNotFoundException($"Categoria com ID {id} não encontrada.");
             }
 
             await _categoryRepository.Delete(id);
