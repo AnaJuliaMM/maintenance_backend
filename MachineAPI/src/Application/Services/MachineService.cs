@@ -1,8 +1,8 @@
 using AutoMapper;
+using MachineAPI.API.DTOs;
 using MachineAPI.Application.Interfaces;
 using MachineAPI.Domain.Entities;
 using MachineAPI.Domain.Interfaces;
-using MachineAPI.API.DTOs;
 
 namespace MachineAPI.Application.Services
 {
@@ -29,15 +29,22 @@ namespace MachineAPI.Application.Services
             return machine != null ? _mapper.Map<MachineDTO>(machine) : null;
         }
 
-        public async Task Add(MachineDTO MachineDTO)
+        public async Task Add(CreateUpdateMachineDTO machineDTO)
         {
-            Machine machine = _mapper.Map<Machine>(MachineDTO);
+            Machine machine = _mapper.Map<Machine>(machineDTO);
             await _machineRepository.Add(machine);
         }
 
-        public async Task Update(int id, MachineDTO MachineDTO)
+        public async Task Update(int id, CreateUpdateMachineDTO machineDTO)
         {
-            Machine machine = _mapper.Map<Machine>(MachineDTO);
+            Machine machine = await _machineRepository.GetById(id);
+
+            if (machine == null)
+            {
+                throw new KeyNotFoundException($"Machine with ID {id} not found.");
+            }
+            _mapper.Map(machineDTO, machine);
+
             await _machineRepository.Update(machine);
         }
 
