@@ -25,24 +25,51 @@ namespace MachineAPI.Application.Services
 
         public async Task<CategoryDTO?> GetById(int id)
         {
+            if (id <= 0)
+            {
+                throw new ArgumentException("ID inválido");
+            }
+
             Category? category = await _categoryRepository.GetById(id);
+
+            if (category == null)
+            {
+                throw new KeyNotFoundException($"Categoria com ID {id} não encontrado.");
+            }
+
             return category != null ? _mapper.Map<CategoryDTO>(category) : null;
         }
 
         public async Task Add(CategoryDTO categoryDTO)
         {
+            if (categoryDTO == null)
+            {
+                throw new ArgumentNullException(nameof(categoryDTO), "Nenhum dado foi recebido");
+            }
+
             Category category = _mapper.Map<Category>(categoryDTO);
             await _categoryRepository.Add(category);
         }
 
         public async Task Update(int id, CategoryDTO categoryDTO)
         {
-            Category category = await _categoryRepository.GetById(id);
+            if (id <= 0)
+            {
+                throw new ArgumentException("ID inválido");
+            }
+
+            if (categoryDTO == null)
+            {
+                throw new ArgumentNullException(nameof(categoryDTO), "Nenhum dado foi recebido");
+            }
+
+            Category? category = await _categoryRepository.GetById(id);
 
             if (category == null)
             {
-                throw new KeyNotFoundException($"Category with ID {id} not found.");
+                throw new KeyNotFoundException($"Categoria com ID {id} não encontrado.");
             }
+
             _mapper.Map(categoryDTO, category);
 
             await _categoryRepository.Update(category);
@@ -50,6 +77,18 @@ namespace MachineAPI.Application.Services
 
         public async Task Delete(int id)
         {
+            if (id <= 0)
+            {
+                throw new ArgumentException("ID inválido");
+            }
+
+            Category? category = await _categoryRepository.GetById(id);
+
+            if (category == null)
+            {
+                throw new KeyNotFoundException($"Categoria com ID {id} não encontrado.");
+            }
+
             await _categoryRepository.Delete(id);
         }
     }
