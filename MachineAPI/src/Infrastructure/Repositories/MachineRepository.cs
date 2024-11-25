@@ -1,6 +1,6 @@
-using Microsoft.EntityFrameworkCore;
 using MachineAPI.Domain.Entities;
 using MachineAPI.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace MachineAPI.Infrastructure.Data
 {
@@ -15,16 +15,16 @@ namespace MachineAPI.Infrastructure.Data
 
         public async Task<IEnumerable<Machine>> GetAll()
         {
-            return await _context.Machines
-                .Include(m => m.Category)
+            return await _context
+                .Machines.Include(m => m.Category)
                 .Include(m => m.Location)
                 .ToListAsync();
         }
 
         public async Task<Machine?> GetById(int id)
         {
-            return await _context.Machines
-                .Include(m => m.Category)
+            return await _context
+                .Machines.Include(m => m.Category)
                 .Include(m => m.Location)
                 .FirstOrDefaultAsync(m => m.Id == id);
         }
@@ -50,47 +50,5 @@ namespace MachineAPI.Infrastructure.Data
                 await _context.SaveChangesAsync();
             }
         }
-
-        public async Task AddLocationToMachine(int machineId, Location location)
-        {   
-            // Find existing machine row
-            Machine? machine = await _context.Machines.FindAsync(machineId);
-            // Associate machine location fk witk location pk
-            machine.LocationId = location.Id;
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task AddCategoryToMachine(int machineId, Category category)
-        {   
-            // Find existing machine row
-            Machine? machine = await _context.Machines.FindAsync(machineId);
-            // Associate machine category fk witk category pk
-            machine.CategoryId = category.Id;
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task RemoveLocationFromMachine(int machineId)
-        {
-            // Find existing machine row
-            Machine? machine = await _context.Machines.FindAsync(machineId);
-            // Remove location pk 
-            machine.LocationId = null;
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task RemoveCategoryFromMachine(int machineId)
-        {
-            // Find existing machine row
-            Machine? machine = await _context.Machines.FindAsync(machineId);
-            // Remove category pk 
-            machine.CategoryId = null;
-            await _context.SaveChangesAsync();
-        }
-
     }
-
-
 }
-
-    
-
