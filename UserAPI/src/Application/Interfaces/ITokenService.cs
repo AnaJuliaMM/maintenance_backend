@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using UserAuth.API.DTOs;
-using UserAuth.Domain.Entities;
+using UserAPI.API.DTOs;
+using UserAPI.Domain.Entities;
 
-namespace UserAuth.Application.Interfaces
+namespace UserAPI.Application.Interfaces
 {
     public interface ITokenService
     {
