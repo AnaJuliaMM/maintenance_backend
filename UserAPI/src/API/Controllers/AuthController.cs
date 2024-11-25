@@ -23,10 +23,12 @@ namespace UserAPI.API.Controllers
         public async Task<IActionResult> LoginUser(UserLoginDTO userLoginDTO)
         {
             var userTokenPayloadDTO = await _authService.LoginUser(userLoginDTO);
+
             if (userTokenPayloadDTO == null)
-                return Unauthorized("Invalid Credentials");
+                return Unauthorized("Credencial Inválida");
 
             var token = _tokenService.GenerateToken(userTokenPayloadDTO);
+
             return Ok(token);
         }
     }
