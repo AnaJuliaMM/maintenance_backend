@@ -48,7 +48,6 @@ namespace MachineAPI.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
@@ -74,18 +73,17 @@ namespace MachineAPI.Migrations
                     b.Property<int?>("LocationId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("ManufactureDate")
+                    b.Property<DateTime?>("ManufactureDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Model")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("SerialNumber")
+                    b.Property<int?>("SerialNumber")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
