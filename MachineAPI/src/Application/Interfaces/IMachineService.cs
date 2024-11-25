@@ -6,8 +6,8 @@ namespace MachineAPI.Application.Interfaces
     {
         Task<IEnumerable<MachineDTO>> GetAll();
         Task<MachineDTO?> GetById(int id);
-        Task Add(MachineDTO machineDTO);
-        Task Update(int id, MachineDTO machineDTO);
+        Task Add(CreateUpdateMachineDTO machineDTO);
+        Task Update(int id, CreateUpdateMachineDTO machineDTO);
         Task Delete(int id);
     }
 }
