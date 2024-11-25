@@ -1,14 +1,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using UserAuth.API.DTOs;
-using UserAuth.Application.Interfaces;
+using UserAPI.API.DTOs;
+using UserAPI.Application.Interfaces;
 
-namespace UserAuth.API.Controllers
+namespace UserAPI.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-
-    [Authorize(Roles = "user:admin")]
+    // [Authorize(Roles = "user:admin")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -18,40 +17,106 @@ namespace UserAuth.API.Controllers
             _userService = userService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetUsers()
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
         {
-            var users = await _userService.GetAllUsers();
-            return Ok(users);
+            try
+            {
+                UserDTO? user = await _userService.GetById(id);
+                return Ok(user);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest($"Erro de argumento: {ex.Message}");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+            }
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetUser(int id)
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
         {
-            var user = await _userService.GetUserById(id);
-            if (user == null) return NotFound();
-            return Ok(user);
+            try
+            {
+                IEnumerable<UserDTO> users = await _userService.GetAll();
+                return Ok(users);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateUser(UserDTO userDTO)
+        public async Task<IActionResult> Create(UserDTO userDTO)
         {
-            await _userService.AddUser(userDTO);
-            return CreatedAtAction(nameof(GetUser), new { id = userDTO.Email }, userDTO);
+            try
+            {
+                await _userService.Add(userDTO);
+                return CreatedAtAction(nameof(GetById), new { id = userDTO.Email }, userDTO);
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id, UserDTO userDTO)
+        public async Task<IActionResult> Update(int id, UserDTO userDTO)
         {
-            await _userService.UpdateUser(id, userDTO);
-            return NoContent();
+            try
+            {
+                await _userService.Update(id, userDTO);
+                return NoContent();
+            }
+            catch (ArgumentNullException ex)
+            {
+                return BadRequest($"Erro de argumento: {ex.Message}");
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest($"Erro de argumento: {ex.Message}");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+            }
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            await _userService.DeleteUser(id);
-            return NoContent();
+            try
+            {
+                await _userService.Delete(id);
+                return NoContent();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest($"Erro de argumento: {ex.Message}");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro interno do servidor: {ex.Message}");
+            }
         }
     }
 }
