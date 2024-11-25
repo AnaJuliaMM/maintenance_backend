@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using UserAuth.API.Extensions;
-using UserAuth.Application.Interfaces;
-using UserAuth.Application.Services;
-using UserAuth.Domain.Interfaces;
-using UserAuth.Infrastructure.Data;
+using UserAPI.API.Extensions;
+using UserAPI.Application.Interfaces;
+using UserAPI.Application.Services;
+using UserAPI.Domain.Interfaces;
+using UserAPI.Infrastructure.Data;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;

@@ -1,4 +1,4 @@
-namespace UserAuth.API.DTOs
+namespace UserAPI.API.DTOs
 {
     public class UserTokenPayloadDTO
     {
