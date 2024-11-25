@@ -1,14 +1,14 @@
-using UserAuth.Domain.Entities;
+using UserAPI.Domain.Entities;
 
-namespace UserAuth.Domain.Interfaces
+namespace UserAPI.Domain.Interfaces
 {
     public interface IUserRepository
     {
-        Task<IEnumerable<User>> GetAllUsers();
-        Task<User> GetUserById(int id);
-        Task<User> FindUserByUsername(string username);
-        Task AddUser(User user);
-        Task UpdateUser(User user);
-        Task DeleteUser(int id);
+        Task<IEnumerable<User>> GetAll();
+        Task<User?> GetById(int id);
+        Task<User?> FindByUsername(string username);
+        Task Add(User user);
+        Task Update(User user);
+        Task Delete(int id);
     }
 }
