@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace UserAuth.Application.Helpers
+namespace UserAPI.Application.Helpers
 {
 
     public class PasswordHelper
