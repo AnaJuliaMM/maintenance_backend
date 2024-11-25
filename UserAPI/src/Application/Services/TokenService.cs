@@ -3,10 +3,10 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.IdentityModel.Tokens; // Biblioteca padrao do C#
-using UserAuth.API.DTOs;
-using UserAuth.Application.Interfaces;
+using UserAPI.API.DTOs;
+using UserAPI.Application.Interfaces;
 
-namespace UserAuth.Application.Services
+namespace UserAPI.Application.Services
 {
     public class TokenService : ITokenService
     {
