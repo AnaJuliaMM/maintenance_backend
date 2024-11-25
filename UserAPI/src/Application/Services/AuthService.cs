@@ -1,12 +1,12 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using UserAuth.API.DTOs;
-using UserAuth.Application.Helpers;
-using UserAuth.Application.Interfaces;
-using UserAuth.Domain.Entities;
-using UserAuth.Domain.Interfaces;
+using UserAPI.API.DTOs;
+using UserAPI.Application.Helpers;
+using UserAPI.Application.Interfaces;
+using UserAPI.Domain.Entities;
+using UserAPI.Domain.Interfaces;
 
-namespace UserAuth.Application.Services
+namespace UserAPI.Application.Services
 {
     public class AuthService : IAuthService
     {
@@ -23,7 +23,7 @@ namespace UserAuth.Application.Services
 
         public async Task<UserTokenPayloadDTO?> LoginUser(UserLoginDTO userLoginDTO)
         {
-            var user = await _userRepository.FindUserByUsername(userLoginDTO.Username);
+            var user = await _userRepository.FindByUsername(userLoginDTO.Username);
             if (user != null)
                 if (PasswordHelper.VerifyPassword(userLoginDTO.Password, user.Password))
                     return _mapper.Map<UserTokenPayloadDTO>(user);
