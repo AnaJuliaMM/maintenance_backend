@@ -43,10 +43,13 @@ namespace UserAPI.Application.Services
 
         public async Task Add(UserDTO userDTO)
         {
-            if (userDTO == null)
+            if (userDTO == null || userDTO.Password == null)
             {
-                throw new ArgumentNullException(nameof(userDTO), "Nenhum dado foi recebido.");
+                throw new ArgumentNullException(nameof(userDTO), "Jm ou mais campos ausentes.");
             }
+
+            string? hashedPassword = PasswordHelper.HashPassword(userDTO.Password);
+            userDTO.Password = hashedPassword;
 
             User user = _mapper.Map<User>(userDTO);
 
@@ -65,11 +68,14 @@ namespace UserAPI.Application.Services
                 throw new ArgumentNullException(nameof(userDTO), "Nenhum dado foi recebido.");
             }
 
-            User? user = await _userRepository.GetById(id);
+            User? user =
+                await _userRepository.GetById(id)
+                ?? throw new KeyNotFoundException($"Usuário com ID {id} não encontrado.");
 
-            if (user == null)
+            if (userDTO.Password != null)
             {
-                throw new KeyNotFoundException($"Usuário com ID {id} não encontrado.");
+                string? hashedPassword = PasswordHelper.HashPassword(userDTO.Password);
+                userDTO.Password = hashedPassword;
             }
 
             _mapper.Map(userDTO, user);
