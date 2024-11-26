@@ -28,6 +28,20 @@ public class Startup
 
         services.AddAutoMapper(typeof(MappingDTO));
 
+        services.AddCors(options =>
+        {
+            options.AddPolicy(
+                "AllowLocalhost3000",
+                builder =>
+                {
+                    builder
+                        .WithOrigins("http://localhost:3000", "http://host.docker.internal:3000")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                }
+            );
+        });
+
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(c =>
@@ -56,6 +70,9 @@ public class Startup
         }
 
         // app.UseHttpsRedirection();
+
+        // Habilitar CORS antes do roteamento
+        app.UseCors("AllowLocalhost3000");
 
         app.UseRouting();
 
