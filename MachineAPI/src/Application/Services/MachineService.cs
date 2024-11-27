@@ -47,6 +47,11 @@ namespace MachineAPI.Application.Services
                 throw new ArgumentNullException(nameof(machineDTO), "Nenhum dado foi recebido.");
             }
 
+            machineDTO.ManufactureDate = DateTime.SpecifyKind(
+                machineDTO.ManufactureDate,
+                DateTimeKind.Utc
+            );
+
             Machine machine = _mapper.Map<Machine>(machineDTO);
             await _machineRepository.Add(machine);
         }
@@ -69,6 +74,11 @@ namespace MachineAPI.Application.Services
             {
                 throw new KeyNotFoundException($"Máquina com ID {id} não encontrada.");
             }
+
+            machineDTO.ManufactureDate = DateTime.SpecifyKind(
+                machineDTO.ManufactureDate,
+                DateTimeKind.Utc
+            );
 
             _mapper.Map(machineDTO, machine);
 
