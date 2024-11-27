@@ -36,7 +36,6 @@ namespace WarehouseAPI.Application.Services
             {
                 throw new KeyNotFoundException($"Item com ID {id} não encontrada.");
             }
-
             return item != null ? _mapper.Map<ItemDTO>(item) : null;
         }
 
@@ -45,6 +44,14 @@ namespace WarehouseAPI.Application.Services
             if (itemDTO == null)
             {
                 throw new ArgumentNullException(nameof(itemDTO), "Nenhum dado foi recebido.");
+            }
+
+            if (itemDTO.acquisitionDate.HasValue)
+            {
+                itemDTO.acquisitionDate = DateTime.SpecifyKind(
+                    itemDTO.acquisitionDate.Value,
+                    DateTimeKind.Utc
+                );
             }
 
             Item item = _mapper.Map<Item>(itemDTO);
@@ -65,11 +72,18 @@ namespace WarehouseAPI.Application.Services
 
             Item? item = await _itemRepository.GetById(id);
 
-            if (itemDTO == null)
+            if (item == null)
             {
                 throw new KeyNotFoundException($"Item com ID {id} não encontrado.");
             }
 
+            if (itemDTO.acquisitionDate.HasValue)
+            {
+                itemDTO.acquisitionDate = DateTime.SpecifyKind(
+                    itemDTO.acquisitionDate.Value,
+                    DateTimeKind.Utc
+                );
+            }
             _mapper.Map(itemDTO, item);
 
             await _itemRepository.Update(item);
