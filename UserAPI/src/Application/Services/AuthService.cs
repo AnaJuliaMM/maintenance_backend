@@ -1,5 +1,4 @@
 using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
 using UserAPI.API.DTOs;
 using UserAPI.Application.Helpers;
 using UserAPI.Application.Interfaces;
