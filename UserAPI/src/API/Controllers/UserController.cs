@@ -8,14 +8,9 @@ namespace UserAPI.API.Controllers
     [ApiController]
     [Route("api/[controller]")]
     // [Authorize(Roles = "user:admin")]
-    public class UserController : ControllerBase
+    public class UserController(IUserService userService) : ControllerBase
     {
-        private readonly IUserService _userService;
-
-        public UserController(IUserService userService)
-        {
-            _userService = userService;
-        }
+        private readonly IUserService _userService = userService;
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
@@ -54,7 +49,7 @@ namespace UserAPI.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(UserDTO userDTO)
+        public async Task<IActionResult> Create(CreateUpdateUserDTO userDTO)
         {
             try
             {
@@ -72,7 +67,7 @@ namespace UserAPI.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, UserDTO userDTO)
+        public async Task<IActionResult> Update(int id, CreateUpdateUserDTO userDTO)
         {
             try
             {
