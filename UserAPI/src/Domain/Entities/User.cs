@@ -8,5 +8,8 @@ namespace UserAPI.Domain.Entities
         public required string Username { get; set; }
         public required string Password { get; set; }
 
+        // Role entity n:1 relation
+        public int? RoleId { get; set; }
+        public Role? Role { get; set; }
     }
 }
