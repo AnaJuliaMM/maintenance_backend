@@ -7,16 +7,10 @@ using UserAPI.Domain.Interfaces;
 
 namespace UserAPI.Application.Services
 {
-    public class UserService : IUserService
+    public class UserService(IUserRepository userRepository, IMapper mapper) : IUserService
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IMapper _mapper;
-
-        public UserService(IUserRepository userRepository, IMapper mapper)
-        {
-            _userRepository = userRepository;
-            _mapper = mapper;
-        }
+        private readonly IUserRepository _userRepository = userRepository;
+        private readonly IMapper _mapper = mapper;
 
         public async Task<IEnumerable<UserDTO>> GetAll()
         {
@@ -41,11 +35,11 @@ namespace UserAPI.Application.Services
             return user != null ? _mapper.Map<UserDTO>(user) : null;
         }
 
-        public async Task Add(UserDTO userDTO)
+        public async Task Add(CreateUpdateUserDTO userDTO)
         {
             if (userDTO == null || userDTO.Password == null)
             {
-                throw new ArgumentNullException(nameof(userDTO), "Jm ou mais campos ausentes.");
+                throw new ArgumentNullException(nameof(userDTO), "Um ou mais campos ausentes.");
             }
 
             string? hashedPassword = PasswordHelper.HashPassword(userDTO.Password);
@@ -56,7 +50,7 @@ namespace UserAPI.Application.Services
             await _userRepository.Add(user);
         }
 
-        public async Task Update(int id, UserDTO userDTO)
+        public async Task Update(int id, CreateUpdateUserDTO userDTO)
         {
             if (id <= 0)
             {
