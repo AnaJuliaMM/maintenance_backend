@@ -17,6 +17,7 @@ namespace MachineAPI.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "user:admin,user:editor, user:viewer")]
         public async Task<ActionResult<LocationDTO?>> GetById(int id)
         {
             try
@@ -39,6 +40,7 @@ namespace MachineAPI.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "user:admin,user:editor, user:viewer")]
         public async Task<ActionResult<IEnumerable<LocationDTO>>> GetAll()
         {
             try
@@ -53,6 +55,7 @@ namespace MachineAPI.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "user:editor, user:admin")]
         public async Task<ActionResult> Create([FromBody] LocationDTO locationDTO)
         {
             try
@@ -75,6 +78,7 @@ namespace MachineAPI.API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "user:editor, user:admin")]
         public async Task<ActionResult> Update(int id, [FromBody] LocationDTO locationDTO)
         {
             try
@@ -101,6 +105,7 @@ namespace MachineAPI.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "user:admin")]
         public async Task<ActionResult> Delete(int id)
         {
             try
