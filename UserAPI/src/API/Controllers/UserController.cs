@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using UserAPI.API.DTOs;
 using UserAPI.Application.Interfaces;
 
@@ -63,6 +64,19 @@ namespace UserAPI.API.Controllers
             catch (ArgumentNullException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest($"Argumento inváldo: {ex.Message}");
+            }
+            catch (DbUpdateException ex)
+                when (ex.InnerException is Npgsql.PostgresException postgresEx
+                    && postgresEx.SqlState == "23503"
+                )
+            {
+                return BadRequest(
+                    "O Role especificado não existe. Verifique o RoleId e tente novamente."
+                );
             }
             catch (Exception ex)
             {
