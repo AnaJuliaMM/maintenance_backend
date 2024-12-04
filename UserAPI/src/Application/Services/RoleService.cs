@@ -34,15 +34,19 @@ namespace UserAPI.Application.Services
             return Role != null ? _mapper.Map<RoleDTO>(Role) : null;
         }
 
-        public async Task Add(RoleDTO RoleDTO)
+        public async Task<RoleDTO> Add(RoleDTO RoleDTO)
         {
             if (RoleDTO == null)
             {
                 throw new ArgumentNullException(nameof(RoleDTO), "Nenhum dado foi recebido.");
             }
 
-            Role Role = _mapper.Map<Role>(RoleDTO);
-            await _roleRepository.Add(Role);
+            Role role = _mapper.Map<Role>(RoleDTO);
+
+            role = await _roleRepository.Add(role);
+            RoleDTO roleDTO = _mapper.Map<RoleDTO>(role);
+
+            return roleDTO;
         }
 
         public async Task Update(int id, RoleDTO RoleDTO)
