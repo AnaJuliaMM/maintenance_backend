@@ -4,7 +4,7 @@ using UserAPI.Application.Interfaces;
 using UserAPI.Domain.Entities;
 using UserAPI.Domain.Interfaces;
 
-namespace MachineAPI.Application.Services
+namespace UserAPI.Application.Services
 {
     public class RoleService(IRoleRepository roleRepository, IMapper mapper) : IRoleService
     {
