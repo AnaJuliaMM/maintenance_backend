@@ -34,31 +34,31 @@ namespace UserAPI.Application.Services
             return Role != null ? _mapper.Map<RoleDTO>(Role) : null;
         }
 
-        public async Task<RoleDTO> Add(RoleDTO RoleDTO)
+        public async Task<RoleDTO> Add(RoleDTO roleDTO)
         {
-            if (RoleDTO == null)
+            if (roleDTO == null)
             {
                 throw new ArgumentNullException(nameof(RoleDTO), "Nenhum dado foi recebido.");
             }
 
-            Role role = _mapper.Map<Role>(RoleDTO);
+            Role role = _mapper.Map<Role>(roleDTO);
 
             role = await _roleRepository.Add(role);
-            RoleDTO roleDTO = _mapper.Map<RoleDTO>(role);
+            RoleDTO createdRoleDTO = _mapper.Map<RoleDTO>(role);
 
-            return roleDTO;
+            return createdRoleDTO;
         }
 
-        public async Task Update(int id, RoleDTO RoleDTO)
+        public async Task Update(int id, RoleDTO roleDTO)
         {
             if (id <= 0)
             {
                 throw new ArgumentException("ID inválido.");
             }
 
-            if (RoleDTO == null)
+            if (roleDTO == null)
             {
-                throw new ArgumentNullException(nameof(RoleDTO), "Nenhum dado foi recebido.");
+                throw new ArgumentNullException(nameof(roleDTO), "Nenhum dado foi recebido.");
             }
 
             Role? Role = await _roleRepository.GetById(id);
@@ -68,7 +68,7 @@ namespace UserAPI.Application.Services
                 throw new KeyNotFoundException($"Papel com ID {id} não encontrado.");
             }
 
-            _mapper.Map(RoleDTO, Role);
+            _mapper.Map(roleDTO, Role);
 
             await _roleRepository.Update(Role);
         }
