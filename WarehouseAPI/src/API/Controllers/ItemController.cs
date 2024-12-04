@@ -17,6 +17,7 @@ namespace WarehouseAPI.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "user:admin,user:editor, user:viewer")]
         public async Task<ActionResult<ItemDTO?>> GetById(int id)
         {
             try
@@ -39,6 +40,7 @@ namespace WarehouseAPI.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "user:admin,user:editor, user:viewer")]
         public async Task<ActionResult<IEnumerable<ItemDTO>>> GetAll()
         {
             try
@@ -53,6 +55,7 @@ namespace WarehouseAPI.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "user:editor, user:admin")]
         public async Task<ActionResult> Create([FromBody] ItemDTO itemDTO)
         {
             try
@@ -71,6 +74,7 @@ namespace WarehouseAPI.API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "user:editor, user:admin")]
         public async Task<ActionResult> Update(int id, [FromBody] ItemDTO itemDTO)
         {
             try
@@ -97,6 +101,7 @@ namespace WarehouseAPI.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "user:admin")]
         public async Task<ActionResult> Delete(int id)
         {
             try
