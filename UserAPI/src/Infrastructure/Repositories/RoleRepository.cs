@@ -18,15 +18,16 @@ namespace UserAPI.Infrastructure.Data
             return await _context.Roles.FindAsync(id);
         }
 
-        public async Task Add(Role Role)
+        public async Task<Role> Add(Role role)
         {
-            await _context.Roles.AddAsync(Role);
+            await _context.Roles.AddAsync(role);
             await _context.SaveChangesAsync();
+            return role;
         }
 
-        public async Task Update(Role Role)
+        public async Task Update(Role role)
         {
-            _context.Roles.Update(Role);
+            _context.Roles.Update(role);
             await _context.SaveChangesAsync();
         }
 
