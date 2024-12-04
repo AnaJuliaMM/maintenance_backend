@@ -1,9 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using UserAPI.Domain.Entities;
 using UserAPI.Domain.Interfaces;
-using UserAPI.Infrastructure.Data;
 
-namespace RoleAPI.Infrastructure.Data
+namespace UserAPI.Infrastructure.Data
 {
     public class RoleRepository(ApplicationDbContext context) : IRoleRepository
     {
