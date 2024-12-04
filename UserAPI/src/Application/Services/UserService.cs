@@ -35,7 +35,7 @@ namespace UserAPI.Application.Services
             return user != null ? _mapper.Map<UserDTO>(user) : null;
         }
 
-        public async Task<UserDTO> Add(CreateUpdateUserDTO userDTO)
+        public async Task<CreateUpdateUserDTO> Add(CreateUpdateUserDTO userDTO)
         {
             if (userDTO == null || userDTO.Password == null)
             {
@@ -48,7 +48,7 @@ namespace UserAPI.Application.Services
             User user = _mapper.Map<User>(userDTO);
             user = await _userRepository.Add(user);
 
-            UserDTO createdUserDTO = _mapper.Map<UserDTO>(user);
+            CreateUpdateUserDTO createdUserDTO = _mapper.Map<CreateUpdateUserDTO>(user);
             return createdUserDTO;
         }
 

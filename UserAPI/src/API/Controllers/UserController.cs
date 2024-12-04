@@ -54,7 +54,7 @@ namespace UserAPI.API.Controllers
         {
             try
             {
-                UserDTO createdUserDTO = await _userService.Add(userDTO);
+                CreateUpdateUserDTO createdUserDTO = await _userService.Add(userDTO);
                 return CreatedAtAction(
                     nameof(GetById),
                     new { id = createdUserDTO.Id },
