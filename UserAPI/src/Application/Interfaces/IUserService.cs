@@ -6,7 +6,7 @@ namespace UserAPI.Application.Interfaces
     {
         Task<IEnumerable<UserDTO>> GetAll();
         Task<UserDTO?> GetById(int id);
-        Task Add(CreateUpdateUserDTO userDTO);
+        Task<UserDTO> Add(CreateUpdateUserDTO userDTO);
         Task Update(int id, CreateUpdateUserDTO userDTO);
         Task Delete(int id);
     }
