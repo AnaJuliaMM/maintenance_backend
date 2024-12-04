@@ -4,23 +4,18 @@ using UserAPI.Domain.Interfaces;
 
 namespace UserAPI.Infrastructure.Data
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository(ApplicationDbContext context) : IUserRepository
     {
-        private readonly ApplicationDbContext _context;
-
-        public UserRepository(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         public async Task<IEnumerable<User>> GetAll()
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users.Include(m => m.Role).ToListAsync();
         }
 
         public async Task<User?> GetById(int id)
         {
-            return await _context.Users.FindAsync(id);
+            return await _context.Users.Include(m => m.Role).FirstOrDefaultAsync(m => m.Id == id);
         }
 
         public async Task Add(User user)
@@ -47,7 +42,9 @@ namespace UserAPI.Infrastructure.Data
 
         public async Task<User?> FindByUsername(string username)
         {
-            return await _context.Users.SingleOrDefaultAsync(u => u.Username == username);
+            return await _context
+                .Users.Include(u => u.Role)
+                .SingleOrDefaultAsync(u => u.Username == username);
         }
     }
 }
