@@ -53,8 +53,8 @@ namespace roleAPI.API.Controllers
         {
             try
             {
-                await _roleService.Add(roleDTO);
-                return CreatedAtAction(nameof(GetById), new { id = roleDTO.Id }, roleDTO);
+                RoleDTO createdRole = await _roleService.Add(roleDTO);
+                return CreatedAtAction(nameof(GetById), new { id = createdRole.Id }, createdRole);
             }
             catch (ArgumentNullException ex)
             {
