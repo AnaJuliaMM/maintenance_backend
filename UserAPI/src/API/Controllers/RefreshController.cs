@@ -1,14 +1,12 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using UserAPI.API.DTOs;
-using UserAPI.Application.Helpers;
 using UserAPI.Application.Interfaces;
-using UserAPI.Application.Services;
 
 namespace UserAPI.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Roles = "user:admin")]
     public class RefreshTokenController(ITokenService tokenService) : ControllerBase
     {
         private readonly ITokenService _tokenService = tokenService;
