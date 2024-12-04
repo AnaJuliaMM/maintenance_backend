@@ -18,10 +18,11 @@ namespace UserAPI.Infrastructure.Data
             return await _context.Users.Include(m => m.Role).FirstOrDefaultAsync(m => m.Id == id);
         }
 
-        public async Task Add(User user)
+        public async Task<User> Add(User user)
         {
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
+            return user;
         }
 
         public async Task Update(User user)
