@@ -53,8 +53,12 @@ namespace UserAPI.API.Controllers
         {
             try
             {
-                await _userService.Add(userDTO);
-                return CreatedAtAction(nameof(GetById), new { id = userDTO.Username }, userDTO);
+                UserDTO createdUserDTO = await _userService.Add(userDTO);
+                return CreatedAtAction(
+                    nameof(GetById),
+                    new { id = createdUserDTO.Id },
+                    createdUserDTO
+                );
             }
             catch (ArgumentNullException ex)
             {
