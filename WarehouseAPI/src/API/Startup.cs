@@ -1,6 +1,8 @@
 using System.Text;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using WarehouseAPI.API.Extensions;
 using WarehouseAPI.Application.Interfaces;
@@ -47,9 +49,59 @@ public class Startup
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "Warehouse API", Version = "v1" });
+            c.AddSecurityDefinition(
+                "Bearer",
+                new OpenApiSecurityScheme()
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description =
+                        "JWT Authorization Header is using Bearer Schema "
+                        + "\n\n Input 'Bearer' + token",
+                }
+            );
+            c.AddSecurityRequirement(
+                new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer",
+                            },
+                        },
+                        Array.Empty<String>()
+                    },
+                }
+            );
         });
 
-        services.AddAuthentication();
+        services
+            .AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = _configuration["Jwt:Issuer"],
+                    ValidAudience = _configuration["Jwt:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(_configuration["Jwt:Key"])
+                    ),
+                };
+            });
         services.AddAuthorization();
 
         services.AddSingleton<IConfiguration>(_configuration);
