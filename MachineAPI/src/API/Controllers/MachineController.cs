@@ -3,6 +3,7 @@ using MachineAPI.Application.Interfaces;
 using MachineAPI.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace MachineAPI.API.Controllers
 {
@@ -68,6 +69,15 @@ namespace MachineAPI.API.Controllers
             catch (ArgumentNullException ex)
             {
                 return BadRequest(ex.Message);
+            }
+            catch (DbUpdateException ex)
+                when (ex.InnerException is Npgsql.PostgresException postgresEx
+                    && postgresEx.SqlState == "23503"
+                )
+            {
+                return BadRequest(
+                    "A Categoria ou a Localização especificada não existe. Verifique o CategoryID ou LocationID e tente novamente."
+                );
             }
             catch (Exception ex)
             {
