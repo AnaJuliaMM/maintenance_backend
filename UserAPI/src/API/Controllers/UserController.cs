@@ -54,7 +54,7 @@ namespace UserAPI.API.Controllers
             try
             {
                 await _userService.Add(userDTO);
-                return CreatedAtAction(nameof(GetById), new { id = userDTO.Email }, userDTO);
+                return CreatedAtAction(nameof(GetById), new { id = userDTO.Username }, userDTO);
             }
             catch (ArgumentNullException ex)
             {
