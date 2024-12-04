@@ -58,8 +58,12 @@ namespace MachineAPI.API.Controllers
         {
             try
             {
-                await _machineService.Add(MachineDTO);
-                return CreatedAtAction(nameof(GetById), new { id = MachineDTO.Id }, MachineDTO);
+                CreateUpdateMachineDTO createdMachineDTO = await _machineService.Add(MachineDTO);
+                return CreatedAtAction(
+                    nameof(GetById),
+                    new { id = createdMachineDTO.Id },
+                    createdMachineDTO
+                );
             }
             catch (ArgumentNullException ex)
             {

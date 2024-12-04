@@ -7,7 +7,7 @@ namespace MachineAPI.Domain.Interfaces
         Task<IEnumerable<Location>> GetAll();
         Task<Location?> GetById(int id);
         Task<Location?> GetByName(string name);
-        Task Add(Location location);
+        Task<Location> Add(Location location);
         Task Update(Location location);
         Task Delete(int id);
     }

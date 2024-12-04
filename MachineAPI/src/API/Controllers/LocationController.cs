@@ -57,8 +57,12 @@ namespace MachineAPI.API.Controllers
         {
             try
             {
-                await _locationService.Add(locationDTO);
-                return CreatedAtAction(nameof(GetById), new { id = locationDTO.Id }, locationDTO);
+                LocationDTO createdLocationDTO = await _locationService.Add(locationDTO);
+                return CreatedAtAction(
+                    nameof(GetById),
+                    new { id = createdLocationDTO.Id },
+                    createdLocationDTO
+                );
             }
             catch (ArgumentNullException ex)
             {

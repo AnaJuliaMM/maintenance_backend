@@ -1,6 +1,6 @@
-using Microsoft.EntityFrameworkCore;
 using MachineAPI.Domain.Entities;
 using MachineAPI.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace MachineAPI.Infrastructure.Data
 {
@@ -28,10 +28,11 @@ namespace MachineAPI.Infrastructure.Data
             return await _context.Locations.FirstOrDefaultAsync(l => l.Name == locationName);
         }
 
-        public async Task Add(Location location)
+        public async Task<Location> Add(Location location)
         {
             await _context.Locations.AddAsync(location);
             await _context.SaveChangesAsync();
+            return location;
         }
 
         public async Task Update(Location location)

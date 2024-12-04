@@ -7,7 +7,7 @@ namespace MachineAPI.Domain.Interfaces
         Task<IEnumerable<Category>> GetAll();
         Task<Category?> GetById(int id);
         Task<Category?> GetByName(string categoryName);
-        Task Add(Category category);
+        Task<Category> Add(Category category);
         Task Update(Category category);
         Task Delete(int id);
     }

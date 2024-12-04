@@ -57,8 +57,12 @@ namespace MachineAPI.API.Controllers
         {
             try
             {
-                await _categoryService.Add(categoryDTO);
-                return CreatedAtAction(nameof(GetById), new { id = categoryDTO.Id }, categoryDTO);
+                CategoryDTO createdCategoryDTO = await _categoryService.Add(categoryDTO);
+                return CreatedAtAction(
+                    nameof(GetById),
+                    new { id = createdCategoryDTO.Id },
+                    createdCategoryDTO
+                );
             }
             catch (ArgumentNullException ex)
             {

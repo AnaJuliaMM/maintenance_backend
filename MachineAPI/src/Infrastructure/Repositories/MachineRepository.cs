@@ -29,10 +29,11 @@ namespace MachineAPI.Infrastructure.Data
                 .FirstOrDefaultAsync(m => m.Id == id);
         }
 
-        public async Task Add(Machine machine)
+        public async Task<Machine> Add(Machine machine)
         {
             await _context.Machines.AddAsync(machine);
             await _context.SaveChangesAsync();
+            return machine;
         }
 
         public async Task Update(Machine machine)

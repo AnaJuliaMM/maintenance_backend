@@ -6,7 +6,7 @@ namespace MachineAPI.Domain.Interfaces
     {
         Task<IEnumerable<Machine>> GetAll();
         Task<Machine?> GetById(int id);
-        Task Add(Machine machine);
+        Task<Machine> Add(Machine machine);
         Task Update(Machine machine);
         Task Delete(int id);
     }

@@ -40,7 +40,7 @@ namespace MachineAPI.Application.Services
             return category != null ? _mapper.Map<CategoryDTO>(category) : null;
         }
 
-        public async Task Add(CategoryDTO categoryDTO)
+        public async Task<CategoryDTO> Add(CategoryDTO categoryDTO)
         {
             if (categoryDTO == null)
             {
@@ -48,7 +48,9 @@ namespace MachineAPI.Application.Services
             }
 
             Category category = _mapper.Map<Category>(categoryDTO);
-            await _categoryRepository.Add(category);
+            category = await _categoryRepository.Add(category);
+
+            return _mapper.Map<CategoryDTO>(category);
         }
 
         public async Task Update(int id, CategoryDTO categoryDTO)

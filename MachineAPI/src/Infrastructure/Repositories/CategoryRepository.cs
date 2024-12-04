@@ -28,10 +28,11 @@ namespace MachineAPI.Infrastructure.Data
             return await _context.Categories.FirstOrDefaultAsync(c => c.Name == categoryName);
         }
 
-        public async Task Add(Category category)
+        public async Task<Category> Add(Category category)
         {
             await _context.Categories.AddAsync(category);
             await _context.SaveChangesAsync();
+            return category;
         }
 
         public async Task Update(Category category)

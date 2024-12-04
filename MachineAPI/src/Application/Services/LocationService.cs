@@ -40,7 +40,7 @@ namespace MachineAPI.Application.Services
             return location != null ? _mapper.Map<LocationDTO>(location) : null;
         }
 
-        public async Task Add(LocationDTO locationDTO)
+        public async Task<LocationDTO> Add(LocationDTO locationDTO)
         {
             if (locationDTO == null)
             {
@@ -48,7 +48,9 @@ namespace MachineAPI.Application.Services
             }
 
             Location location = _mapper.Map<Location>(locationDTO);
-            await _locationRepository.Add(location);
+            location = await _locationRepository.Add(location);
+
+            return _mapper.Map<LocationDTO>(location);
         }
 
         public async Task Update(int id, LocationDTO locationDTO)

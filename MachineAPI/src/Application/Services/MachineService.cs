@@ -40,7 +40,7 @@ namespace MachineAPI.Application.Services
             return machine != null ? _mapper.Map<MachineDTO>(machine) : null;
         }
 
-        public async Task Add(CreateUpdateMachineDTO machineDTO)
+        public async Task<CreateUpdateMachineDTO> Add(CreateUpdateMachineDTO machineDTO)
         {
             if (machineDTO == null)
             {
@@ -53,7 +53,9 @@ namespace MachineAPI.Application.Services
             );
 
             Machine machine = _mapper.Map<Machine>(machineDTO);
-            await _machineRepository.Add(machine);
+            machine = await _machineRepository.Add(machine);
+
+            return _mapper.Map<CreateUpdateMachineDTO>(machine);
         }
 
         public async Task Update(int id, CreateUpdateMachineDTO machineDTO)
