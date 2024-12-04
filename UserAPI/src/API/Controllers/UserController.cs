@@ -8,7 +8,7 @@ namespace UserAPI.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    // [Authorize(Roles = "user:admin")]
+    [Authorize(Roles = "user:admin")]
     public class UserController(IUserService userService) : ControllerBase
     {
         private readonly IUserService _userService = userService;

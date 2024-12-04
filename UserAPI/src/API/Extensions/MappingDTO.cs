@@ -1,5 +1,4 @@
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using UserAPI.API.DTOs;
 using UserAPI.Domain.Entities;
 
@@ -11,9 +10,14 @@ public class MappingDTO : Profile
     {
         CreateMap<Role, RoleDTO>().ReverseMap();
 
-        CreateMap<User, UserTokenPayloadDTO>();
-
         CreateMap<User, CreateUpdateUserDTO>().ReverseMap();
+
+        CreateMap<User, UserTokenPayloadDTO>()
+            .ForMember(
+                dest => dest.Role,
+                opt =>
+                    opt.MapFrom(src => src.Role != null ? "user:" + src.Role.Name : "user:viewer")
+            );
 
         CreateMap<User, UserDTO>()
             .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role));
