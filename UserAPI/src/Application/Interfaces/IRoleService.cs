@@ -6,7 +6,7 @@ namespace UserAPI.Application.Interfaces
     {
         Task<IEnumerable<RoleDTO>> GetAll();
         Task<RoleDTO?> GetById(int id);
-        Task Add(RoleDTO roleDTO);
+        Task<RoleDTO> Add(RoleDTO roleDTO);
         Task Update(int id, RoleDTO roleDTO);
         Task Delete(int id);
     }
