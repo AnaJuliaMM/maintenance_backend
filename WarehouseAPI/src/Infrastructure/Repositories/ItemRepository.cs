@@ -23,10 +23,11 @@ namespace WarehouseAPI.Infrastructure.Data
             return await _context.Items.FindAsync(id);
         }
 
-        public async Task Add(Item item)
+        public async Task<Item> Add(Item item)
         {
             await _context.Items.AddAsync(item);
             await _context.SaveChangesAsync();
+            return item;
         }
 
         public async Task Update(Item item)

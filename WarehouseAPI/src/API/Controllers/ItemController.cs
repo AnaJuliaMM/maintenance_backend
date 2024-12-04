@@ -60,8 +60,12 @@ namespace WarehouseAPI.API.Controllers
         {
             try
             {
-                await _itemService.Add(itemDTO);
-                return CreatedAtAction(nameof(GetById), new { id = itemDTO.Id }, itemDTO);
+                ItemDTO createdItemDTO = await _itemService.Add(itemDTO);
+                return CreatedAtAction(
+                    nameof(GetById),
+                    new { id = createdItemDTO.Id },
+                    createdItemDTO
+                );
             }
             catch (ArgumentNullException ex)
             {

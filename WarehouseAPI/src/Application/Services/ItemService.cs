@@ -39,7 +39,7 @@ namespace WarehouseAPI.Application.Services
             return item != null ? _mapper.Map<ItemDTO>(item) : null;
         }
 
-        public async Task Add(ItemDTO itemDTO)
+        public async Task<ItemDTO> Add(ItemDTO itemDTO)
         {
             if (itemDTO == null)
             {
@@ -55,7 +55,9 @@ namespace WarehouseAPI.Application.Services
             }
 
             Item item = _mapper.Map<Item>(itemDTO);
-            await _itemRepository.Add(item);
+            item = await _itemRepository.Add(item);
+
+            return _mapper.Map<ItemDTO>(item);
         }
 
         public async Task Update(int id, ItemDTO itemDTO)

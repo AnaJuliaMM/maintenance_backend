@@ -6,7 +6,7 @@ namespace WarehouseAPI.Application.Interfaces
     {
         Task<IEnumerable<ItemDTO>> GetAll();
         Task<ItemDTO?> GetById(int id);
-        Task Add(ItemDTO itemDTO);
+        Task<ItemDTO> Add(ItemDTO itemDTO);
         Task Update(int id, ItemDTO itemDTO);
         Task Delete(int id);
     }
