@@ -12,31 +12,31 @@ services:
     volumes:
       - user_db:/var/lib/postgresql/data
 
-  # machine_db:
-  #   image: postgres
-  #   hostname: machine_db
-  #   container_name: machine_db
-  #   environment:
-  #     POSTGRES_USER: machine_api
-  #     POSTGRES_PASSWORD: machine_api
-  #     POSTGRES_DB: machine_api
-  #   ports:
-  #     - "5433:5432"
-  #   volumes:
-  #     - machine_db:/var/lib/postgresql/data
+  machine_db:
+    image: postgres
+    hostname: machine_db
+    container_name: machine_db
+    environment:
+      POSTGRES_USER: machine_api
+      POSTGRES_PASSWORD: machine_api
+      POSTGRES_DB: machine_api
+    ports:
+      - "5433:5432"
+    volumes:
+      - machine_db:/var/lib/postgresql/data
 
-  # warehouse_db:
-  #   image: postgres
-  #   hostname: warehouse_db
-  #   container_name: warehouse_db
-  #   environment:
-  #     POSTGRES_USER: warehouse_api
-  #     POSTGRES_PASSWORD: warehouse_api
-  #     POSTGRES_DB: warehouse_api
-  #   ports:
-  #     - "5434:5432"
-  #   volumes:
-  #     - warehouse_db:/var/lib/postgresql/data
+  warehouse_db:
+    image: postgres
+    hostname: warehouse_db
+    container_name: warehouse_db
+    environment:
+      POSTGRES_USER: warehouse_api
+      POSTGRES_PASSWORD: warehouse_api
+      POSTGRES_DB: warehouse_api
+    ports:
+      - "5434:5432"
+    volumes:
+      - warehouse_db:/var/lib/postgresql/data
 
   user_api:
     container_name: user_api
@@ -48,32 +48,33 @@ services:
     depends_on:
       - user_db
 
-  # machine_api:
-  #   container_name: machine_api
-  #   build:
-  #     context: .
-  #     dockerfile: ./MachineAPI/src/Infrastructure/Docker/Dockerfile
-  #   ports:
-  #     - "3012:8080"
-  #   depends_on:
-  #     - machine_db
+  machine_api:
+    container_name: machine_api
+    build:
+      context: .
+      dockerfile: ./MachineAPI/src/Infrastructure/Docker/Dockerfile
+    ports:
+      - "3012:8080"
+    depends_on:
+      - machine_db
 
-  # warehouse_api:
-  #   container_name: warehouse_api
-  #   build:
-  #     context: .
-  #     dockerfile: ./WarehouseAPI/src/Infrastructure/Docker/Dockerfile
-  #   ports:
-  #     - "3013:8080"
-  #   depends_on:
-  #     - warehouse_db
+  warehouse_api:
+    container_name: warehouse_api
+    build:
+      context: .
+      dockerfile: ./WarehouseAPI/src/Infrastructure/Docker/Dockerfile
+    ports:
+      - "3013:8080"
+    depends_on:
+      - warehouse_db
 
-  # gateway_api:
-  #   build:
-  #     context: .
-  #     dockerfile: ./GatewayAPI/Dockerfile
-  #   ports:
-  #     - "3013:8080"
+  gateway_api:
+    container_name: gateway_api
+    build:
+      context: .
+      dockerfile: ./GatewayAPI/Dockerfile
+    ports:
+      - "3014:8080"
 
   pgadmin:
     image: dpage/pgadmin4
