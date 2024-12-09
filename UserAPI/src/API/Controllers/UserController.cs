@@ -70,13 +70,21 @@ namespace UserAPI.API.Controllers
                 return BadRequest($"Argumento inváldo: {ex.Message}");
             }
             catch (DbUpdateException ex)
-                when (ex.InnerException is Npgsql.PostgresException postgresEx
-                    && postgresEx.SqlState == "23503"
-                )
             {
-                return BadRequest(
-                    "O Role especificado não existe. Verifique o RoleId e tente novamente."
-                );
+                if (
+                    ex.InnerException is Npgsql.PostgresException foreignKeyEx
+                    && foreignKeyEx.SqlState == "23503"
+                )
+                    return BadRequest(
+                        "O Role especificado não existe. Verifique o RoleId e tente novamente."
+                    );
+                else if (
+                    ex.InnerException is Npgsql.PostgresException uniqueConstraintEx
+                    && uniqueConstraintEx.SqlState == "23505"
+                )
+                    return BadRequest("O username já existe.");
+                else
+                    return BadRequest("Erro ao persistir no banco de dados");
             }
             catch (Exception ex)
             {
