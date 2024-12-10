@@ -8,28 +8,42 @@ using Ocelot.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Config CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        "AllowMultipleOrigins",
+        policy =>
+        {
+            policy
+                .WithOrigins("http://localhost:3000", "http://host.docker.internal:3000")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        }
+    );
+});
+
 // Config Authentication
 builder
-    .Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
+    .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(
+        "Bearer",
+        options =>
         {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = "issuer",
-            ValidAudience = "audience",
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes("ewgvgwvxiqboqxbuoqnx927et632fev287bh")
-            ),
-        };
-    });
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = "emissor",
+                ValidAudience = "destinatario",
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes("CLyuqWAaoBZIFSzkfworDetPz4YinvqG")
+                ),
+            };
+        }
+    );
 
 // Add Ocelot e Swagger
 builder.Services.AddOcelot();
@@ -84,6 +98,9 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
+// Enable http requests
+app.UseCors("AllowMultipleOrigins");
+
 // Enable authentication and authorization
 app.UseAuthentication();
 app.UseAuthorization();
@@ -93,9 +110,9 @@ app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "API Gateway");
-    c.SwaggerEndpoint("http://localhost:3011/swagger/v1/swagger.json", "User API");
-    c.SwaggerEndpoint("http://localhost:3012/swagger/v1/swagger.json", "Machine API");
-    c.SwaggerEndpoint("http://localhost:3013/swagger/v1/swagger.json", "Warehouse API");
+    c.SwaggerEndpoint("http://host.docker.internal:3011/swagger/v1/swagger.json", "User API");
+    c.SwaggerEndpoint("http://host.docker.internal:3012/swagger/v1/swagger.json", "Machine API");
+    c.SwaggerEndpoint("http://host.docker.internal:3013/swagger/v1/swagger.json", "Warehouse API");
     c.RoutePrefix = string.Empty;
 });
 
