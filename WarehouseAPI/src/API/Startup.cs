@@ -33,11 +33,15 @@ public class Startup
         services.AddCors(options =>
         {
             options.AddPolicy(
-                "AllowLocalhost3000",
+                "AllowLocalhosts",
                 builder =>
                 {
                     builder
-                        .WithOrigins("http://localhost:3000", "http://host.docker.internal:3000")
+                        .WithOrigins(
+                            "http://localhost:3000",
+                            "http://host.docker.internal:3000",
+                            "http://host.docker.internal:3014"
+                        )
                         .AllowAnyMethod()
                         .AllowAnyHeader();
                 }
@@ -124,7 +128,7 @@ public class Startup
         // app.UseHttpsRedirection();
 
         // Habilitar CORS antes do roteamento
-        app.UseCors("AllowLocalhost3000");
+        app.UseCors("AllowLocalhosts");
 
         app.UseRouting();
 
