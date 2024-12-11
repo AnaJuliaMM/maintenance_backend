@@ -7,7 +7,7 @@ namespace roleAPI.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "role:admin")]
+    [Authorize(Roles = "user:admin")]
     public class RoleController(IRoleService roleService) : ControllerBase
     {
         private readonly IRoleService _roleService = roleService;
